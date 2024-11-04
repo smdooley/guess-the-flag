@@ -12,12 +12,10 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var countries = ["Estonia","France","Germany","Ireland","Italy","Nigeria","Poland","Spain","UK","Ukraine","US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
+    @State private var score = 0
     
     var body: some View {
         ZStack {
-            //            LinearGradient(colors: [.blue, .black], startPoint: .top, endPoint: .bottom)
-            //                .ignoresSafeArea()
-            
             RadialGradient(stops: [
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3),
@@ -58,7 +56,7 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
-                Text("Score: ???")
+                Text("Score: \(score)")
                     .foregroundStyle(.white)
                     .font(.title.bold())
                 
@@ -69,12 +67,13 @@ struct ContentView: View {
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your score is ???")
+            Text("Your score is \(score)")
         }
     }
     
     func flagTapped(number: Int) {
         if(number == correctAnswer) {
+            score += 1
             scoreTitle = "Correct"
         } else {
             scoreTitle = "Wrong"
