@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    private let maxQuestions = 8
+    
     @State private var showingScore = false
     @State private var showingGameOver = false
     
@@ -18,7 +20,7 @@ struct ContentView: View {
     @State private var scoreMessage = ""
     @State private var questionCount = 0
     
-    private let maxQuestions = 8
+    @State private var selectedFlag: Int? = nil
     
     var body: some View {
         ZStack {
@@ -49,6 +51,12 @@ struct ContentView: View {
                             flagTapped(number: number)
                         } label: {
                             FlagImage(country: countries[number])
+                                .rotation3DEffect(
+                                    .degrees(selectedFlag == number ? 360 : 0), axis: /*@START_MENU_TOKEN@*/(x: 0.0, y: 1.0, z: 0.0)/*@END_MENU_TOKEN@*/
+                                )
+                                .opacity(selectedFlag == nil || selectedFlag == number ? 1 : 0.25)
+                                .scaleEffect(selectedFlag == nil || selectedFlag == number ? 1 : 0.8)
+                                .animation(.default, value: selectedFlag)
                         }
                     }
                 }
@@ -81,6 +89,8 @@ struct ContentView: View {
     }
     
     func flagTapped(number: Int) {
+        selectedFlag = number
+        
         if(number == correctAnswer) {
             score += 1
             scoreTitle = "Correct"
@@ -102,6 +112,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        selectedFlag = nil
     }
     
     func resetGame() {
@@ -109,7 +120,7 @@ struct ContentView: View {
         score = 0
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
-        
+        selectedFlag = nil
     }
 }
 
